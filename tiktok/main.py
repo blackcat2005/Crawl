@@ -1,2 +1,1 @@
-
-import tiktok.TikSingle
+from .Tikget import Tikget

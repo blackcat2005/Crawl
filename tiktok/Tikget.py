@@ -1,7 +1,7 @@
 import requests as req
 import json
 from functools import wraps
-
+from tiktok.browser import browser
 class Tikget:
     
     class _Decorator:
@@ -24,6 +24,12 @@ class Tikget:
                 while len(response) < count:
                     realCount = count if count < maxCount else maxCount
                     res = func(self, *args, realCount, **kwargs, maxCursor=maxCursor)
+
+                    try:
+                        res['items']
+                    except:
+                        print("Most Likely User's List is Empty")
+                        return []
 
                     if 'items' in res.keys():
                         for t in res['items']:
@@ -54,7 +60,7 @@ class Tikget:
         :return: json
         """
         b = browser(api_url)
-        api_url += f"&verifyFp={b.verifyFp}&_signature={b.signature}"
+        #api_url += f"&verifyFp={b.verifyFp}&_signature={b.signature}"
         header = {
             'authority': 'm.tiktok.com',
             "method": "GET",
@@ -68,7 +74,7 @@ class Tikget:
             'sec-fetch-site': 'same-site',
             "user-agent": b.userAgent
         }
-        r = req.get(api_url, headers=header)
+        r = req.get(b.url, headers=header)
 
         try:
             print(api_url)
@@ -165,10 +171,10 @@ if __name__ == '__main__':
     user = get.user("tra.dang.904")
     #userPost = get.postsUser('62962882845', 'MS4wLjABAAAAaOgKYENcaNEcIPP1lio_ZUeSp_Gt9FdzhngYgquVD1Q')
     #userPost = get.postsByName('tra.dang.904', 10)
-    trend = get.trending()
-    #liked = get.likedUser('62962882845', 'MS4wLjABAAAAaOgKYENcaNEcIPP1lio_ZUeSp_Gt9FdzhngYgquVD1Q', 5)
+    #trend = get.trending()
+    liked = get.likedUser('62962882845', 'MS4wLjABAAAAaOgKYENcaNEcIPP1lio_ZUeSp_Gt9FdzhngYgquVD1Q', 5)
 
     with open('result.json', 'w', encoding='utf-8') as f:
-        f.write(str(json.dumps(trend)))
+        f.write(json.dumps(user, ensure_ascii=False))
         pass
     pass

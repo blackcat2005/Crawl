@@ -45,7 +45,7 @@ class browser:
         self.verifyFp = ''.join(
             random.choice(string.ascii_lowercase + string.ascii_uppercase + string.digits) for i in range(16))
         print(self.verifyFp)
-        signature = await page.evaluate('''() => {
+        self.signature = await page.evaluate('''() => {
                             var url = "''' + self.url + "&verifyFp=" + self.verifyFp + '''"
                             var token = window.byted_acrawler.sign({url: url});
                             return token;

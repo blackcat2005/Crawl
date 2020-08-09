@@ -19,7 +19,7 @@ class DownloadEffect:
             except TypeError:
                 print('using dummy length !!!')
                 total_size = 10000000
-
+            print('Downloading file ' + filename)
             for chunk in r.iter_content(chunk_size=block_size):
 
                 if chunk:  # filter out keep-alive new chunks

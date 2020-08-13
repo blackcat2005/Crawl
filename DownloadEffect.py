@@ -1,16 +1,32 @@
 import requests as req
 import time
 import sys
+from pathlib import Path as pa
+import os
 
 
 class DownloadEffect:
 
     @staticmethod
     def download(link, filename, path=None):
+        """
+        Download file from link and auto create folder video in __dir if path None
+        :param link:
+        :param filename:
+        :param path:
+        :return: false if file exists
+        """
+        pathOpen = None
+        if path is not None or path != '':
+            path = pa(path) / 'video'
+            if not path.exists():
+                os.mkdir(path)
+            pathOpen = path / filename
+        if pa(pathOpen).is_file():
+            return False
         r = req.get(link, stream=True)
-
         start_time = time.time()
-        with open(filename, 'wb') as f:
+        with open(pathOpen, 'wb') as f:
             count = 1
             block_size = 512
             try:
@@ -36,3 +52,4 @@ class DownloadEffect:
                     f.write(chunk)
                     f.flush()
                     count += 1
+        return True

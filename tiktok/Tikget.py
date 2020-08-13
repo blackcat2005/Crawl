@@ -81,7 +81,7 @@ class Tikget:
         r = req.get(b.url, headers=header)
 
         try:
-            print(b.url)
+            # print(b.url)
             return r.json()
         except:
             print("Convert error")
@@ -149,7 +149,7 @@ class Tikget:
         api_url = f"https://tiktok.com/api/item_list/?count={count}&id={userID}&type=1&secUid={secUID}&maxCursor={maxCursor}&minCursor=0&sourceType=8&appId=1233&region={region}&language={language}"
         return self.data(api_url)
 
-    def postsByName(self, username, count=0, language='en', region='US'):
+    def postsByName(self, username, count=10, language='en', region='US'):
         """
           Gets a specific user's tiktoks by username
         """
@@ -202,7 +202,9 @@ class Tikget:
         :param url:
         :return:
         """
-        api_url = url.replace(r'www.tiktok.com/@', 'www.tikmate.online/').replace('?lang=vi', '').replace('/video/', '/')
+        api_url = url.replace(r'www.tiktok.com/@', 'www.tikmate.online/').replace('/video/', '/')
+        if '?lang=vi' in api_url :
+            api_url = api_url.replace('?lang=vi', '')
         head = {
             'authority': 'tikmate.online',
             'method': 'GET',
@@ -243,65 +245,88 @@ class Tikget:
         return data["itemInfo"]["itemStruct"]["video"]["downloadAddr"]
         pass
 
-    #sol2
-    def video(self, url):
+    #sol2 error
+    def _video(self, url):
         """
         Get all video through ssstiktok
         :param url:
         :return:
         """
-        api_url = 'https://ssstiktok.io/api/1/fetch'
+        # get token
+        # head = {
+        #     "Accept-Encoding": "utf8",
+        #     "Accept-Language": "en-US,en;q= 0.9",
+        #     # "Connection": "keep-alive",
+        #     "Content-Length": "137",
+        #     "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
+        #     "Host": "ssstiktok.io",
+        #     # "HX-Active-Element": "submit",
+        #     "HX-Current-URL": "https://ssstiktok.io/vi",
+        #     "HX-Request": "true",
+        #     "HX-Target": "target",
+        #     "Origin": "https://ssstiktok.io",
+        #     # "Sec-Fetch-Dest": "empty",
+        #     # "Sec-Fetch-Mode": "cors",
+        #     # "Sec-Fetch-Site": "same-origin",
+        #     "User-Agent": self.userAgent
+        # }
+        # r = req.get("https://ssstiktok.io").text
+        # token = html(r, 'html.parser').find_all(id='token')[0].get('value')
+        # print(token)
+        # api_url = 'https://ssstiktok.io/api/1/fetch'
+        # data = {
+        #     "id": url,
+        #     "token": token,
+        #     "locale": "vi"
+        # }
+        # r = req.request('POST', api_url, headers=head, data=data)
+        # soup = html(r.text, 'html.parser')
+        # print(soup)
+        # # With href not contains http
+        # try:
+        #     links = [_.get('href') if 'http' in _.get('href') else 'https://ssstiktok.io' + _.get('href') for _ in
+        #              soup.find_all('a')]
+        #     link = {
+        #         'no1': links[0],  # link ssstiktok no wt
+        #         'no2': links[1],  # link api no wt
+        #         'wt1': links[2],  # link ssstiktok wt
+        #         'wt2': links[3]  # link api wt
+        #     }
+        #     return link
+        # except Exception as err:
+        #     print(err)
+        #     print('Cannot')
+        #     return None
+        # pass
         head = {
             "Accept-Encoding": "utf8",
-            "Accept-Language": "en-US,en;q= 0.9",
-            "Connection": "keep-alive",
-            "Content-Length": "137",
+            "Accept-Language": "en-US,en;q=0.9",
+            # "Content-Length": "203",
             "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
-            "Host": "ssstiktok.io",
-            "HX-Active-Element": "submit",
-            "HX-Current-URL": "https://ssstiktok.io/vi",
-            "HX-Request": "true",
-            "HX-Target": "target",
-            "Origin": "https://ssstiktok.io",
+            'origin': 'https://snaptik.app',
+            'referer': 'https://snaptik.app/vn',
             "Sec-Fetch-Dest": "empty",
             "Sec-Fetch-Mode": "cors",
             "Sec-Fetch-Site": "same-origin",
-            "User-Agent": self.userAgent
+            "User-Agent": 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36 OPR/69.0.3686.95'
         }
+        api_url = 'https://snaptik.app/action-v9.php'
         data = {
-            "id": url,
-            "token": "3429e054162007b025850207feae24f5",
-            "locale": "vi"
+            'url': url
         }
         r = req.request('POST', api_url, headers=head, data=data)
         soup = html(r.text, 'html.parser')
-        # With href not contains http
-        try:
-            links = [_.get('href') if 'http' in _.get('href') else 'https://ssstiktok.io' + _.get('href') for _ in
-                     soup.find_all('a')]
-            link = {
-                'no1': links[0],  # link ssstiktok no wt
-                'no2': links[1],  # link api no wt
-                'wt1': links[2],  # link ssstiktok wt
-                'wt2': links[3]  # link api wt
-            }
-            return link
-        except Exception as err:
-            print(err)
-            print('Cannot')
-            return None
-        pass
+        print(soup)
 
-    # private
     @staticmethod
-    def _getFilename(url):
+    def getFilename(url):
         """
         Get file name from url video or url music
         :param url:
         :return:
         """
         if 'video' in url:
-            return str(url.split("/")[-1]) + '.mp4'
+            return str(url.split("/")[-1]).split('?')[0] + '.mp4'
         elif 'mp3' in url:
             return str(url.split("/")[-1])
 
@@ -309,15 +334,15 @@ if __name__ == '__main__':
     get = Tikget()
     # user = get.user("tra.dang.904")
     # #userPost = get.postsUser('62962882845', 'MS4wLjABAAAAaOgKYENcaNEcIPP1lio_ZUeSp_Gt9FdzhngYgquVD1Q')
-    # #userPost = get.postsByName('tra.dang.904', 10)
+    # userPost = get.postsByName('linhbarbie', 10)
     # #trend = get.trending()
     # liked = get.likedUser('62962882845', 'MS4wLjABAAAAaOgKYENcaNEcIPP1lio_ZUeSp_Gt9FdzhngYgquVD1Q', 5)
     # tiktokobject = get.itemsByID('6855179879650954497')
     #
     # with open('result.json', 'w', encoding='utf-8') as f:
-    #     f.write(json.dumps(tiktokobject, ensure_ascii=False))
+    #     f.write(json.dumps(userPost, ensure_ascii=False))
 
     #print(get.video('https://www.tiktok.com/@thonguyen011192/video/6855179879650954497?lang=vi'))
     #print(get.music('https://www.tiktok.com/@thonguyen011192/video/6855179879650954497?lang=vi'))
-    #print(get.video('https://www.tiktok.com/@viruby2003/video/6856944870528011522?lang=vi'))
+    # print(get.video('https://www.tiktok.com/@gingaming06/video/6859567263150787842?lang=vi'))
     pass

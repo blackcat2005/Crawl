@@ -1,8 +1,0 @@
-###
-GET https://m.tiktok.com/api/item_list/?count={{$count}}&id={{$id}}&type=1&secUid={{$sec}}&maxCursor=0&minCursor=0&sourceType=8&appId=1233&region=US&language=en
-$count = 30
-&id = 6794046055954416641
-&sec = MS4wLjABAAAAkM4UD6kcCMQQMYj1UdyGFs_RqdHvjmkxlGjO4M7WUTopQasTVUnet6aT9FLJ4lNj
-accept-encoding: utf-8
-
-###

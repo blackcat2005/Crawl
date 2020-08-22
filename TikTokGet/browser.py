@@ -5,7 +5,7 @@ import string
 import requests
 
 # Import Detection From Stealth
-from tiktok.stealth import stealth
+from TikTokGet.stealth import stealth
 
 
 class browser:
@@ -69,13 +69,6 @@ class browser:
         }''')
 
         if self.url != None:
-            await self.page.goto(self.url +
-                                "&verifyFp=" + self.verifyFp +
-                                "&_signature=" + self.signature, {
-                                    'waitUntil': "load"
-                                })
-
-            self.data = await self.page.content()
             self.url += "&verifyFp=" + self.verifyFp + "&_signature=" + self.signature
 
         await self.browser.close()
@@ -90,8 +83,6 @@ class browser:
             await self.page.evaluateOnNewDocument("""() => {
         delete navigator.__proto__.webdriver;
     }""")
-
-            # Check for user:pass proxy
 
             await stealth(self.page)
             await self.page.goto(self.url, {

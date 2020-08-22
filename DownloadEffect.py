@@ -3,12 +3,14 @@ import time
 import sys
 from pathlib import Path as pa
 import os
+from time import sleep
+from TikTokGet.const import con
 
 
 class DownloadEffect:
 
     @staticmethod
-    def download(link, filename, path=None):
+    def download(link, filename, path=None, directory=None):
         """
         Download file from link and auto create folder video in __dir if path None
         :param link:
@@ -18,13 +20,18 @@ class DownloadEffect:
         """
         pathOpen = None
         if path is not None or path != '':
-            path = pa(path) / 'video'
+            direc = 'down' if directory is None else directory
+            path = pa(path) / direc
             if not path.exists():
                 os.mkdir(path)
             pathOpen = path / filename
         if pa(pathOpen).is_file():
+            print('File is exist')
             return False
+
+        sleep(con.sleeptime)
         r = req.get(link, stream=True)
+
         start_time = time.time()
         with open(pathOpen, 'wb') as f:
             count = 1
@@ -37,9 +44,7 @@ class DownloadEffect:
                 total_size = 10000000
             print('Downloading file ' + filename)
             for chunk in r.iter_content(chunk_size=block_size):
-
                 if chunk:  # filter out keep-alive new chunks
-
                     duration = time.time() - start_time
                     progress_size = int(count * block_size)
                     if duration == 0:
@@ -48,8 +53,8 @@ class DownloadEffect:
                     percent = int(count * block_size * 100 / total_size)
                     sys.stdout.write("\r...%d%%, %d MB, %d KB/s, %d seconds passed" %
                                      (percent, progress_size / (1024 * 1024), speed, duration))
-
                     f.write(chunk)
                     f.flush()
                     count += 1
+            print('\n')
         return True

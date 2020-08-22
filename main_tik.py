@@ -1,8 +1,5 @@
 import sys
 import os
-from pathlib import Path as path
-sys.path.append(str(path(os.path.abspath(__file__)).parent.parent))
-
 from TikTokGet.Tikget import Tikget
 from TikTokGet.TikChanel import TikChanel
 from DownloadEffect import DownloadEffect as down

@@ -1,0 +1,6 @@
+.idea\
+Pipfile
+.gitignore
+Pipfile.lock
+requirements.txt
+tiktok\tmp\
